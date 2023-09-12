@@ -1,0 +1,2 @@
+class LoginPage:
+    pass
