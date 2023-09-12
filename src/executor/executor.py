@@ -5,4 +5,7 @@ class Executor:
         self.task = task
 
     def execute(self):
-        pass
+        self._login()
+
+    def _login(self):
+        self.task.login()
