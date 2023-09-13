@@ -10,10 +10,11 @@ from .task_config import TaskWebExectorConfig
 
 class WebExecutor:
     def __init__(self, web_executor_config: TaskWebExectorConfig) -> None:
+        print(web_executor_config.chrome_path, web_executor_config.driver_path)
         self.web_executor_config = web_executor_config
         options = Options()
         options.binary_location = web_executor_config.chrome_path
-        self.driver = webdriver.Chrome(options=options, service=Service(driver_path))
+        self.driver = webdriver.Chrome(options=options, service=Service(web_executor_config.driver_path))
 
     def has(self, by: By, element_key: str) -> bool:
         try :
@@ -23,14 +24,19 @@ class WebExecutor:
             return False
         
     def _wait_load(self):
-        self.driver.execute_script("return document.readyState").equals("complete")
+        self.driver.execute_script("return document.readyState") == "complete"
         
     def load(self, url: str):
         self.driver.get(url)
         self._wait_load()
 
     def wait_to(self, url: str):
-        WebDriverWait(self.driver, 10, 0.01).until(EC.url_to_be(url=url))
+        while True:
+            try:
+                WebDriverWait(self.driver, 10, 0.01).until(EC.url_to_be(url=url))
+                break
+            except Exception:
+                pass
         self._wait_load()
 
     def current_url(self) -> str:
@@ -50,13 +56,17 @@ class WebExecutor:
         except Exception:
             return (None, False)
 
-    def execute(self, by: By, element_key: str) -> (WebElement, bool):
+    def execute(self, by: By, element_key: str, wait_by: By = None, wait_element_key: str = None) -> bool:
         try :
-            element = self.driver.find_element(by, element_key).click()
-            self._wait_load()
-            return (element, True)
+            _ = self.driver.find_element(by, element_key).click()
+            self.wait(wait_by, wait_element_key)
+            if not wait_by or not wait_element_key:
+                self._wait_load()
+            else:
+                self.wait(wait_by, wait_element_key)
+            return True
         except Exception:
-            return (None, False)
+            return False
         
     def fill(self, by: By, element_key: str, value: str) -> (WebElement, bool):
         try :

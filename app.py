@@ -1,7 +1,8 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from PyQt6.QtGui import QAction, QMouseEvent
-from src.executor import executor
+from src.executor import Executor
+from src.task import get_jd_task
 
 class AppMain(QMainWindow):
     def __init__(self):
@@ -35,6 +36,9 @@ class AppMain(QMainWindow):
 
     
 def init_executor():
+    jd_task = get_jd_task("jd_account", "jd_password", qr_login=False)
+    executor = Executor(key=jd_task.key(), task=jd_task)
+    executor.execute()
     
 
 if __name__ == '__main__':

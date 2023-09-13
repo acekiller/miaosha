@@ -4,10 +4,11 @@ from datetime import datetime, timedelta, UTC
 import pytz
 
 class TaskMeta(type):
-    def __init__(self, web_executor: WebExecutor):
-        # 自定义类的初始化逻辑
-        self.web_executor = web_executor
-        super().__init__()
+    # def __init__(self, web_executor: WebExecutor):
+    #     print("----->")
+    #     # 自定义类的初始化逻辑
+    #     self.web_executor = web_executor
+    #     super().__init__()
 
 
     "是否已经登录"
@@ -37,9 +38,11 @@ class TaskMeta(type):
     "执行订单任务"
     def execute_order_task(self):
         pass
-
-    def wait_to(self, exec_time: datetime):
+    
+    @staticmethod
+    def wait_to(exec_time: datetime):
         e_time = exec_time + timedelta(milliseconds=-100)
+        e_time = e_time.astimezone(pytz.UTC)
         while True:
             now = datetime.now(UTC)
             if now >= e_time:

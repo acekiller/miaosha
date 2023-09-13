@@ -5,7 +5,11 @@ class Executor:
         self.task = task
 
     def execute(self):
-        self._login()
+        if not self.task.has_login():
+            self.task.login()
 
-    def _login(self):
+        print("开始执行订单任务")
+        self.task.execute_order_task()
+
+    def login(self):
         self.task.login()

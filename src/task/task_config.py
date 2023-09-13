@@ -1,37 +1,44 @@
-from datetime import datetime
-from enum import Enum
+from datetime import datetime, timedelta
+from enum import Enum, unique
 
-class PlatformType(Enum):
-    JD = 1
-    TMALL = 2
+import sys
+if sys.platform == "darwin":
+    default_chrome_path = "resources/116/Chrome.app/Contents/MacOS/Google Chrome"
+    default_chrome_drive_path = "resources/116/chromedriver"
+else:
+    default_chrome_path = None
+    default_chrome_drive_path = None
 
-    config_dict = {
-        JD: {
+config_dict = {
+        'jd': {
             "name": "京东",
-            "key": "jd",
             "web_site": "https://www.jd.com",
             "cart_url": "https://cart.jd.com/cart_index",
         },
-        TMALL: {
+        "tmall": {
             "name": "天猫",
-            "key": "tmall",
             "web_site": "https://www.tmall.com",
             "cart_url": "https://cart.tmall.com/cart.htm",
         },
     }
+
+@unique
+class PlatformType(Enum):
+    JD = "jd"
+    TMALL = "tmall"
     
     def web_site(self):
-        self.config_dict.get(self).get("web_site")
+        return config_dict.get(self.value).get("web_site")
 
     def cart_url(self):
-        return self.config_dict.get(self).get("cart_url")
+        return config_dict.get(self.value).get("cart_url")
 
     def platform_flag(self) -> str:
-        return self.config_dict.get(self).get("key")
+        return self.value
         
 
 class TaskWebExectorConfig:
-    def __init__(self, chrome_path: str, driver_path: str):
+    def __init__(self, chrome_path: str = default_chrome_path, driver_path: str = default_chrome_drive_path):
         self.chrome_path = chrome_path
         self.driver_path = driver_path
         
@@ -76,6 +83,9 @@ class TaskConfig:
         return self._web_executor_config
     
     def next_execute_goods_items(self) -> (list[GoodsConfig], datetime):
-        return (self.goods_items, self.goos_items[0].exec_time)
+        goods_items = [GoodsConfig(url="https://item.jd.com/569064.html")]
+        return(goods_items, datetime.now() + timedelta(seconds=20))
+        # return (self.goods_items, self.goods_items[0].exec_time)
+        # return (self.goods_items, self.goos_items[0].exec_time)
 
     
