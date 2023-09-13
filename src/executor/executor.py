@@ -8,7 +8,6 @@ class Executor:
         if not self.task.has_login():
             self.task.login()
 
-        print("开始执行订单任务")
         self.task.execute_order_task()
 
     def login(self):
