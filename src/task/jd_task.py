@@ -5,7 +5,6 @@ from .task_config import TaskConfig, GoodsConfig
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.common.by import By
 from .task_config import TaskConfig, PlatformType, TaskWebExectorConfig
-from datetime import datetime
 
 
 class JdTask(metaclass=TaskMeta):
@@ -43,6 +42,7 @@ class JdTask(metaclass=TaskMeta):
             self.web_executor.fill(By.ID, "nloginpwd", self.task_config.password)
             self.web_executor.execute(By.ID, "loginsubmit")
         self.web_executor.wait_to(pre_url)
+        print("账户登录成功")
 
 
     "选中商品"

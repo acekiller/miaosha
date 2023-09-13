@@ -83,8 +83,13 @@ class TaskConfig:
         return self._web_executor_config
     
     def next_execute_goods_items(self) -> (list[GoodsConfig], datetime):
-        goods_items = [GoodsConfig(url="https://item.jd.com/569064.html")]
-        return(goods_items, datetime.now() + timedelta(seconds=20))
+        if self.platform == PlatformType.JD:
+            goods_items = [GoodsConfig(url="https://item.jd.com/569064.html")]
+            return(goods_items, datetime.now() + timedelta(seconds=10))
+        elif self.platform == PlatformType.TMALL:
+            return ([], datetime.now() + timedelta(seconds=10))
+            # goods_items = [GoodsConfig(url="https://item.jd.com/569064.html")]
+            # return(goods_items, datetime.now() + timedelta(seconds=20))
         # return (self.goods_items, self.goods_items[0].exec_time)
         # return (self.goods_items, self.goos_items[0].exec_time)
 
