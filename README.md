@@ -24,3 +24,9 @@ Project starts 2023-09-15
 
 @endgantt
 ```
+
+目前仅实现了京东的自动化运行逻辑。
+在使用时，注意需要自己修改几个信息：
+1. app.py文件中的账号和密码信息
+2. 下载chrome和与chrome版本相匹配的chromedriver文件。
+3. 修改task_config.py文件中的default_chrome_path 和 default_chrome_drive_path。项目中，是配置的mac系统环境。使用者需要根据实际系统修改一下。
